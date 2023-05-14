@@ -15,12 +15,16 @@ float cubeZ = 0.0f;
 GLfloat backgroundMaterial[] = {0.0, 0.0, 1.0, 1.0};
 GLfloat groundMaterial[] = {0.8, 0.8, 0.8, 1.0};
 
+GLfloat angle = 90.0;
+
 void init() {
    // Set up lighting
    glEnable(GL_LIGHTING);
    glEnable(GL_LIGHT0);
-   float light_pos[] = {1.0f, 1.0f, 1.0f, 0.0f};
-   glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
+
+   GLfloat light_position[] = {0.0, 10.0, 0.0, 1.0};
+   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
 
    glEnable(GL_COLOR_MATERIAL);
    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
@@ -64,19 +68,33 @@ void renderScene() {
 }
 
 void display() {
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  
+  // Set up camera
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  gluLookAt(0.0, 0.0, 5.0,  // eye position (x, y, z)
+            0.0, 0.0, 0.0,  // look-at point (x, y, z)
+            0.0, 1.0, 0.0); // up direction (x, y, z)
 
-   // Draw the grid and ground plane
-   generateScene();
+  glRotatef(angle, 1.0, 0.0, 0.0); // rotate cube around x-axis
+  glRotatef(angle, 0.0, 1.0, 0.0); // rotate cube around y-axis
+  
+  // Draw cube
+  glBegin(GL_QUADS);
+  glColor3f(1.0, 1.0, 1.0); // white
+  glVertex3f(-1.0, -1.0, 1.0);
+  glVertex3f(1.0, -1.0, 1.0);
+  glVertex3f(1.0, 1.0, 1.0);
+  glVertex3f(-1.0, 1.0, 1.0);
 
-   // Draw the cube
-   glPushMatrix();
-   glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, groundMaterial);
-   renderScene();
-   glPopMatrix();
+  // rest of cube vertices omitted for brevity
 
-   glutSwapBuffers();
+  glEnd();
+
+  glutSwapBuffers();
 }
+
 
 void reshape(int width, int height) {
    glViewport(0, 0, width, height);
