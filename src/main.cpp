@@ -4,6 +4,8 @@
 #include <GL/glut.h>
 #include <math.h>
 
+#include "keyboard_mouse.h"
+
 const int screenWidth = 1920;
 const int screenHeight = 1080;
 const int gridSize = 50;
@@ -15,6 +17,7 @@ float cubeZ = 0.0f;
 GLfloat backgroundMaterial[] = {0.0, 0.0, 1.0, 1.0};
 GLfloat groundMaterial[] = {0.8, 0.8, 0.8, 1.0};
 
+// Camera settings
 GLfloat angle = 90.0;
 
 void init() {
@@ -32,7 +35,23 @@ void init() {
    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, backgroundMaterial);
    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, backgroundMaterial);
    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, groundMaterial);
+
+   // Set camera position, target, and up vector
+   camPosX = 0.0f;
+   camPosY = 0.0f;
+   camPosZ = 5.0f;
+
+   targetX = 0.0f;
+   targetY = 0.0f;
+   targetZ = 0.0f;
+
+   upX = 0.0f;
+   upY = 1.0f;
+   upZ = 0.0f;
+
+   updateCamera();
 }
+
 
 void generateScene() {
    // Set the material properties for the background
@@ -73,9 +92,9 @@ void display() {
   // Set up camera
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  gluLookAt(0.0, 0.0, 5.0,  // eye position (x, y, z)
-            0.0, 0.0, 0.0,  // look-at point (x, y, z)
-            0.0, 1.0, 0.0); // up direction (x, y, z)
+  gluLookAt(camPos[0], camPos[1], camPos[2],
+            camTarget[0], camTarget[1], camTarget[2],
+            camUp[0], camUp[1], camUp[2]);
 
   glRotatef(angle, 1.0, 0.0, 0.0); // rotate cube around x-axis
   glRotatef(angle, 0.0, 1.0, 0.0); // rotate cube around y-axis
@@ -102,24 +121,6 @@ void reshape(int width, int height) {
    glLoadIdentity();
    float aspect = (float)width / (float)height;
    gluPerspective(60.0f, aspect, 0.1f, 100.0f);
-}
-
-void keyboard(unsigned char key, int x, int y) {
-   switch(key) {
-      case 'w':
-         cubeY += 0.1f;
-         break;
-      case 'a':
-         cubeX -= 0.1f;
-         break;
-      case 's':
-         cubeY -= 0.1f;
-         break;
-      case 'd':
-         cubeX += 0.1f;
-         break;
-   }
-   glutPostRedisplay();
 }
 
 int main(int argc, char** argv) {
