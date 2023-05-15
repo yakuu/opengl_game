@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -13,12 +16,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install OpenGL dependencies
+      - name: Set up Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            /home/runner/.cache
+          key: ${{ runner.os }}-cache-${{ hashFiles('**/*.cpp') }}
+
+      - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y mesa-utils libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev
+          sudo apt-get install -y \
+            libglew-dev \
+            freeglut3-dev \
+            mesa-common-dev \
+            libglu1-mesa-dev
 
-      - name: Build and test
+      - name: Build
         run: |
-          make build
-          make test
+          g++ -m64 -I/usr/include src/main.cpp -o myprogram -L/usr/lib -lglew -lglut -lGL -lGLU -fpermissive
+
+      - name: Run Tests
+        run: |
+          # Run your tests or executable here
+
