@@ -7,6 +7,9 @@ on:
   pull_request:
     branches:
       - main
+    types:
+      - opened
+      - synchronize
 
 jobs:
   build:
@@ -36,9 +39,19 @@ jobs:
         run: |
           g++ -m64 -I/usr/include src/main.cpp -o myprogram -L/usr/lib -lGLEW -lglut -lGL -lGLU -fpermissive
 
+      - name: Check PR Title or Body
+        id: check_pr
+        run: |
+          if [[ "${{ github.event.pull_request.title }}" == *"finish"* ]] || [[ "${{ github.event.pull_request.body }}" == *"finish"* ]]; then
+            echo "::set-output name=finish::true"
+          else
+            echo "::set-output name=finish::false"
+          fi
+
       - name: Generate Timestamp
         id: timestamp
         run: echo "::set-output name=timestamp::$(date +%Y%m%d%H%M%S)"
+        if: steps.check_pr.outputs.finish == 'true'
 
       - name: Create Release
         id: create_release
@@ -50,6 +63,7 @@ jobs:
           release_name: Release ${{ steps.timestamp.outputs.timestamp }}
           draft: false
           prerelease: false
+        if: steps.check_pr.outputs.finish == 'true'
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
@@ -60,3 +74,4 @@ jobs:
           asset_path: ./myprogram
           asset_name: myprogram
           asset_content_type: application/octet-stream
+        if: steps.check_pr.outputs.finish == 'true'
