@@ -1,0 +1,24 @@
+name: OpenGL Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install OpenGL dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mesa-utils libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev
+
+      - name: Build and test
+        run: |
+          make build
+          make test
