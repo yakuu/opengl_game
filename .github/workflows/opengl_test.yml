@@ -22,9 +22,6 @@ jobs:
           path: |
             /home/runner/.cache
           key: ${{ runner.os }}-cache-${{ hashFiles('**/*.cpp') }}
-      - name: Checking another way for opengl libraries
-        run: |
-          sudo find /usr/lib -name libGLEW.so*
 
       - name: Install Dependencies
         run: |

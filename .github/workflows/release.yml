@@ -1,0 +1,62 @@
+name: Release of executable files
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            /home/runner/.cache
+          key: ${{ runner.os }}-cache-${{ hashFiles('**/*.cpp') }}
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libglew-dev \
+            freeglut3-dev \
+            mesa-common-dev \
+            libglu1-mesa-dev
+
+      - name: Build
+        run: |
+          g++ -m64 -I/usr/include src/main.cpp -o myprogram -L/usr/lib -lGLEW -lglut -lGL -lGLU -fpermissive
+
+      - name: Generate Timestamp
+        id: timestamp
+        run: echo "::set-output name=timestamp::$(date +%Y%m%d%H%M%S)"
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.timestamp.outputs.timestamp }}
+          release_name: Release ${{ steps.timestamp.outputs.timestamp }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./myprogram
+          asset_name: myprogram
+          asset_content_type: application/octet-stream
