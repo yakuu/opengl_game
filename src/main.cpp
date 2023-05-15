@@ -6,20 +6,6 @@
 
 #include "keyboard_mouse.h"
 
-const int screenWidth = 1920;
-const int screenHeight = 1080;
-const int gridSize = 50;
-
-float cubeX = 0.0f;
-float cubeY = 0.0f;
-float cubeZ = 0.0f;
-
-GLfloat backgroundMaterial[] = {0.0, 0.0, 1.0, 1.0};
-GLfloat groundMaterial[] = {0.8, 0.8, 0.8, 1.0};
-
-// Camera settings
-GLfloat angle = 90.0;
-
 void init() {
    // Set up lighting
    glEnable(GL_LIGHTING);
@@ -36,19 +22,7 @@ void init() {
    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, backgroundMaterial);
    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, groundMaterial);
 
-   // Set camera position, target, and up vector
-   camPosX = 0.0f;
-   camPosY = 0.0f;
-   camPosZ = 5.0f;
-
-   targetX = 0.0f;
-   targetY = 0.0f;
-   targetZ = 0.0f;
-
-   upX = 0.0f;
-   upY = 1.0f;
-   upZ = 0.0f;
-
+   initCamera();
    updateCamera();
 }
 
