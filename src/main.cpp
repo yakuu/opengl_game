@@ -1,8 +1,4 @@
-#include <windows.h>
-#include <iostream>
-#include <sstream>
 #include <GL/glut.h>
-#include <math.h>
 
 #include "keyboard_mouse.h"
 
