@@ -24,7 +24,7 @@ jobs:
           key: ${{ runner.os }}-cache-${{ hashFiles('**/*.cpp') }}
       - name: Checking another way for opengl libraries
         run: |
-          sudo find / -name libGLEW.so*
+          sudo find /usr/lib -name libGLEW.so*
 
       - name: Install Dependencies
         run: |
