@@ -22,6 +22,9 @@ jobs:
           path: |
             /home/runner/.cache
           key: ${{ runner.os }}-cache-${{ hashFiles('**/*.cpp') }}
+      - name: Checking for opengl libraries
+        run: |
+          ls /usr/lib | grep glew
 
       - name: Install Dependencies
         run: |
@@ -34,7 +37,8 @@ jobs:
 
       - name: Build
         run: |
-          g++ -m64 -I/usr/include src/main.cpp -o myprogram -L/usr/lib -lglew -lglut -lGL -lGLU -fpermissive
+          g++ -m64 -I/usr/include src/main.cpp -o myprogram -L/usr/lib -lGLEW -lglut -lGL -lGLU -fpermissive
+
 
       - name: Run Tests
         run: |
