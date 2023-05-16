@@ -14,6 +14,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.title, 'finish') || contains(github.event.pull_request.body, 'finish')
 
     steps:
       - name: Checkout code
@@ -42,12 +43,8 @@ jobs:
       - name: Check PR Title or Body
         id: check_pr
         run: |
-          if [[ "${{ github.event.pull_request.title }}" == *"finish"* ]] || [[ "${{ github.event.pull_request.body }}" == *"finish"* ]]; then
-            echo "::set-output name=finish::true"
-          else
-            echo "::set-output name=finish::false"
-          fi
-
+          echo "::set-output name=finish::${{ contains(github.event.pull_request.title, 'finish') || contains(github.event.pull_request.body, 'finish') }}"
+          
       - name: Generate Timestamp
         id: timestamp
         run: echo "::set-output name=timestamp::$(date +%Y%m%d%H%M%S)"

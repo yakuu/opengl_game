@@ -34,10 +34,18 @@ jobs:
 
       - name: Build
         run: |
-          g++ -m64 -I/usr/include src/main.cpp -o myprogram -L/usr/lib -lGLEW -lglut -lGL -lGLU -fpermissive
+          g++ -m64 -I/usr/include -c src/main.cpp -o obj/main.o -fpermissive
+          g++ -m64 -o myprogram obj/main.o -L/usr/lib -lGLEW -lglut -lGL -lGLU -fpermissive
 
+      - name: Cache Object Files and Executable
+        uses: actions/cache@v2
+        with:
+          path: |
+            obj/main.o
+            myprogram
+          key: ${{ runner.os }}-cache-${{ hashFiles('**/*.cpp') }}
 
       - name: Run Tests
         run: |
           # Run your tests or executable here
-
+          ./myprogram
