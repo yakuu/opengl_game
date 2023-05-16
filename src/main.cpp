@@ -19,9 +19,6 @@ void init() {
    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, backgroundMaterial);
    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, groundMaterial);
 
-   initCamera();
-   updateCamera();
-   glutPostRedisplay();  // Request redisplay
 }
 
 
@@ -65,9 +62,7 @@ void display()
    // Set up camera
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-   gluLookAt(camPos[0], camPos[1], camPos[2],
-            camTarget[0], camTarget[1], camTarget[2],
-            camUp[0], camUp[1], camUp[2]);
+   gluLookAt(camPosX, camPosY, camPosZ, targetX, targetY, targetZ, 0.0f, 0.0f, 1.0f);
 
    glRotatef(angle, 1.0, 0.0, 0.0); // rotate cube around x-axis
    glRotatef(angle, 0.0, 1.0, 0.0); // rotate cube around y-axis
@@ -108,11 +103,11 @@ void reshape(int width, int height) {
 }
 
 int main(int argc, char** argv) {
+   initCamera();
    glutInit(&argc, argv);
    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
    glutInitWindowSize(screenWidth * 0.8, screenHeight * 0.8);
    glutCreateWindow("Cube Example");
-
    init();
    
    glutDisplayFunc(display);

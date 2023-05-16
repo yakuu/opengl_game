@@ -42,8 +42,8 @@ GLfloat angle = 90.0;
 void initCamera() {
     // Set camera position, target, and up vector
     camPosX = 0.0f;
-    camPosY = 0.0f;
-    camPosZ = 5.0f;
+    camPosY = -23.100052f;
+    camPosZ = 7.999997f;
 
     targetX = 0.0f;
     targetY = 0.0f;
@@ -52,24 +52,6 @@ void initCamera() {
     upX = 0.0f;
     upY = 1.0f;
     upZ = 0.0f;
-    // Set camera position
-    float camPos[] = {camPosX, camPosY, camPosZ};
-
-    // Set camera target
-    float camTarget[] = {targetX, targetY, targetZ};
-
-    // Set camera up vector
-    float camUp[] = {upX, upY, upZ};
-
-    // Convert float values to strings
-    std::string camPosStr = std::to_string(camPos[0]) + ", " + std::to_string(camPos[1]) + ", " + std::to_string(camPos[2]);
-    std::string camTargetStr = std::to_string(camTarget[0]) + ", " + std::to_string(camTarget[1]) + ", " + std::to_string(camTarget[2]);
-    std::string camUpStr = std::to_string(camUp[0]) + ", " + std::to_string(camUp[1]) + ", " + std::to_string(camUp[2]);
-
-    // Print the values
-    std::cout << "Camera Position: " << camPosStr << std::endl;
-    std::cout << "Camera Target: " << camTargetStr << std::endl;
-    std::cout << "Camera Up: " << camUpStr << std::endl;
 }
 
 void updateCamera() {
@@ -129,6 +111,14 @@ void keyboard(unsigned char key, int x, int y) {
    camPos[2] = camPosZ;
    updateCamera();
    glutPostRedisplay();  // Request redisplay
+   // Convert float values to strings
+   std::string camPosStr = std::to_string(camPos[0]) + ", " + std::to_string(camPos[1]) + ", " + std::to_string(camPos[2]);
+   std::string camTargetStr = std::to_string(camTarget[0]) + ", " + std::to_string(camTarget[1]) + ", " + std::to_string(camTarget[2]);
+   std::string camUpStr = std::to_string(camUp[0]) + ", " + std::to_string(camUp[1]) + ", " + std::to_string(camUp[2]);
+   // Print the values
+   std::cout << "Camera Position: " << camPosStr << std::endl;
+   std::cout << "Camera Target: " << camTargetStr << std::endl;
+   std::cout << "Camera Up: " << camUpStr << std::endl;
 }
 
 void special(int key, int x, int y) {
