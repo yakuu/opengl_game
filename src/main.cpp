@@ -1,5 +1,6 @@
 #include <GL/glut.h>
 
+#include "envirement.h"
 #include "keyboard_mouse.h"
 
 void init() {
@@ -57,33 +58,45 @@ void renderScene() {
    glPopMatrix();
 }
 
-void display() {
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  
-  // Set up camera
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  gluLookAt(camPos[0], camPos[1], camPos[2],
+void display()
+{
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+   // Set up camera
+   glMatrixMode(GL_MODELVIEW);
+   glLoadIdentity();
+   gluLookAt(camPos[0], camPos[1], camPos[2],
             camTarget[0], camTarget[1], camTarget[2],
             camUp[0], camUp[1], camUp[2]);
 
-  glRotatef(angle, 1.0, 0.0, 0.0); // rotate cube around x-axis
-  glRotatef(angle, 0.0, 1.0, 0.0); // rotate cube around y-axis
-  
-  // Draw cube
-  glBegin(GL_QUADS);
-  glColor3f(1.0, 1.0, 1.0); // white
-  glVertex3f(-1.0, -1.0, 1.0);
-  glVertex3f(1.0, -1.0, 1.0);
-  glVertex3f(1.0, 1.0, 1.0);
-  glVertex3f(-1.0, 1.0, 1.0);
+   glRotatef(angle, 1.0, 0.0, 0.0); // rotate cube around x-axis
+   glRotatef(angle, 0.0, 1.0, 0.0); // rotate cube around y-axis
 
-  // rest of cube vertices omitted for brevity
+   // Draw cube
+   glBegin(GL_QUADS);
+   glColor3f(1.0, 1.0, 1.0); // white
+   glVertex3f(-1.0, -1.0, 1.0);
+   glVertex3f(1.0, -1.0, 1.0);
+   glVertex3f(1.0, 1.0, 1.0);
+   glVertex3f(-1.0, 1.0, 1.0);
+   glEnd();
 
-  glEnd();
+   // Draw grid
+   glBegin(GL_LINES);
+   glColor3f(0.5, 0.5, 0.5); // gray
+   float gridSize = 10.0f; // Adjust the grid size as needed
+   float gridStep = 1.0f; // Adjust the grid step size as needed
+   for (float i = -gridSize; i <= gridSize; i += gridStep) {
+      glVertex3f(i, -1.0, -gridSize);
+      glVertex3f(i, -1.0, gridSize);
+      glVertex3f(-gridSize, -1.0, i);
+      glVertex3f(gridSize, -1.0, i);
+   }
+   glEnd();
 
-  glutSwapBuffers();
+   glutSwapBuffers();
 }
+
 
 
 void reshape(int width, int height) {
@@ -105,6 +118,13 @@ int main(int argc, char** argv) {
    glutDisplayFunc(display);
    glutReshapeFunc(reshape);
    glutKeyboardFunc(keyboard);
+
+   // Create a grid
+   std::vector<std::vector<int>> materials(10, std::vector<int>(10, 255));  // Initialize all materials as 255 (white)
+   Grid grid(10, 10, 1.0f, materials);
+
+   // Set the scale of the grid
+   grid.setScale(20.0f);
 
    glutMainLoop();
 
