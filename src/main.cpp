@@ -20,6 +20,7 @@ void init() {
 
    initCamera();
    updateCamera();
+   glutPostRedisplay();  // Request redisplay
 }
 
 
@@ -109,3 +110,5 @@ int main(int argc, char** argv) {
 
    return 0;
 }
+
+

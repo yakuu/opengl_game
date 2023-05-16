@@ -1,4 +1,5 @@
-#include <GL/glut.h>
+#include <iostream>
+#include <string>
 
 // Camera position
 float camPosX = 0.0f;
@@ -15,14 +16,6 @@ float upX = 0.0f;
 float upY = 1.0f;
 float upZ = 0.0f;
 
-const int screenWidth = 1920;
-const int screenHeight = 1080;
-const int gridSize = 50;
-
-float cubeX = 0.0f;
-float cubeY = 0.0f;
-float cubeZ = 0.0f;
-
 // Set camera position
 float camPos[] = {camPosX, camPosY, camPosZ};
 
@@ -31,6 +24,14 @@ float camTarget[] = {targetX, targetY, targetZ};
 
 // Set camera up vector
 float camUp[] = {upX, upY, upZ};
+
+const int screenWidth = 1920;
+const int screenHeight = 1080;
+const int gridSize = 50;
+
+float cubeX = 0.0f;
+float cubeY = 0.0f;
+float cubeZ = 0.0f;
 
 GLfloat backgroundMaterial[] = {0.0, 0.0, 1.0, 1.0};
 GLfloat groundMaterial[] = {0.8, 0.8, 0.8, 1.0};
@@ -51,6 +52,24 @@ void initCamera() {
     upX = 0.0f;
     upY = 1.0f;
     upZ = 0.0f;
+    // Set camera position
+    float camPos[] = {camPosX, camPosY, camPosZ};
+
+    // Set camera target
+    float camTarget[] = {targetX, targetY, targetZ};
+
+    // Set camera up vector
+    float camUp[] = {upX, upY, upZ};
+
+    // Convert float values to strings
+    std::string camPosStr = std::to_string(camPos[0]) + ", " + std::to_string(camPos[1]) + ", " + std::to_string(camPos[2]);
+    std::string camTargetStr = std::to_string(camTarget[0]) + ", " + std::to_string(camTarget[1]) + ", " + std::to_string(camTarget[2]);
+    std::string camUpStr = std::to_string(camUp[0]) + ", " + std::to_string(camUp[1]) + ", " + std::to_string(camUp[2]);
+
+    // Print the values
+    std::cout << "Camera Position: " << camPosStr << std::endl;
+    std::cout << "Camera Target: " << camTargetStr << std::endl;
+    std::cout << "Camera Up: " << camUpStr << std::endl;
 }
 
 void updateCamera() {
@@ -63,14 +82,20 @@ void mouse(int button, int state, int x, int y) {
         // Update target based on mouse position
         targetX = (x - glutGet(GLUT_WINDOW_WIDTH)/2.0f) / 10.0f;
         targetY = (glutGet(GLUT_WINDOW_HEIGHT)/2.0f - y) / 10.0f;
+
+        updateCamera();
+        glutPostRedisplay();  // Request redisplay
     } else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
         // Right mouse button pressed
         // Update camera position based on mouse position
         camPosX = (x - glutGet(GLUT_WINDOW_WIDTH)/2.0f) / 10.0f;
         camPosY = (glutGet(GLUT_WINDOW_HEIGHT)/2.0f - y) / 10.0f + 10.0f;
+
+        updateCamera();
+        glutPostRedisplay();  // Request redisplay
     }
-    updateCamera();
 }
+
 
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
@@ -99,7 +124,11 @@ void keyboard(unsigned char key, int x, int y) {
         camPosY -= 0.1f;
         break;
     }
-    updateCamera();
+   camPos[0] = camPosX;
+   camPos[1] = camPosY;
+   camPos[2] = camPosZ;
+   updateCamera();
+   glutPostRedisplay();  // Request redisplay
 }
 
 void special(int key, int x, int y) {
@@ -122,4 +151,5 @@ void special(int key, int x, int y) {
             break;
     }
     updateCamera();
+    glutPostRedisplay();  // Request redisplay
 }
