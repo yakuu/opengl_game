@@ -21,11 +21,12 @@ jobs:
         with:
           path: |
             /home/runner/.cache
+            /usr/lib
+            /usr/include
           key: ${{ runner.os }}-cache-${{ hashFiles('**/*.cpp') }}
 
       - name: Install Dependencies
         run: |
-          sudo apt-get update
           sudo apt-get install -y \
             libglew-dev \
             freeglut3-dev \
