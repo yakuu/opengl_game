@@ -21,8 +21,10 @@ jobs:
         with:
           path: |
             /home/runner/.cache
-            /usr/lib
-            /usr/include
+            /usr/lib/x86_64-linux-gnu/libGLEW.so*
+            /usr/lib/x86_64-linux-gnu/libglut.so*
+            /usr/lib/x86_64-linux-gnu/libGL.so*
+            /usr/lib/x86_64-linux-gnu/libGLU.so*
           key: ${{ runner.os }}-cache-${{ hashFiles('**/*.cpp') }}
 
       - name: Install Dependencies
