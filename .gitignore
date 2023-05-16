@@ -1,3 +1,4 @@
 
 myprogram.exe
 .vscode/settings.json
+src/node_modules/*

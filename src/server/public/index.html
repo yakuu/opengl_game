@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Socket.IO Chat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    #messages {
+      margin-bottom: 10px;
+    }
+    #message-input {
+      width: 200px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Socket.IO Chat</h1>
+
+  <div id="messages"></div>
+
+  <form id="message-form">
+    <input type="text" id="message-input" placeholder="Type a message">
+    <button type="submit">Send</button>
+  </form>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    // Connect to the Socket.IO server
+    const socket = io();
+
+    // Handle receiving a chat message
+    socket.on('chat message', (message) => {
+      appendMessage(message);
+    });
+
+    // Handle form submission
+    const form = document.getElementById('message-form');
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const input = document.getElementById('message-input');
+      const message = input.value.trim();
+      if (message !== '') {
+        socket.emit('chat message', message); // Send the message to the server
+        input.value = ''; // Clear the input field
+        appendMessage(`You: ${message}`); // Display the message locally
+      }
+    });
+
+    // Function to append a message to the chat window
+    function appendMessage(message) {
+      const messagesDiv = document.getElementById('messages');
+      const messageP = document.createElement('p');
+      messageP.textContent = message;
+      messagesDiv.appendChild(messageP);
+    }
+  </script>
+</body>
+</html>
