@@ -21,40 +21,6 @@ void init() {
 
 }
 
-
-void generateScene() {
-   // Set the material properties for the background
-   glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, backgroundMaterial);
-   
-   // Draw the background grid
-   glBegin(GL_LINES);
-   for (int i = -gridSize; i <= gridSize; i++) {
-      glVertex3f(i, -1, -gridSize);
-      glVertex3f(i, -1, gridSize);
-      glVertex3f(-gridSize, -1, i);
-      glVertex3f(gridSize, -1, i);
-   }
-   glEnd();
-
-   // Set the material properties for the ground
-   glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, groundMaterial);
-
-   // Draw the ground plane
-   glBegin(GL_QUADS);
-   glVertex3f(-gridSize, -1, -gridSize);
-   glVertex3f(-gridSize, -1, gridSize);
-   glVertex3f(gridSize, -1, gridSize);
-   glVertex3f(gridSize, -1, -gridSize);
-   glEnd();
-}
-
-void renderScene() {
-   glPushMatrix();
-   glTranslatef(cubeX, cubeY, cubeZ);
-   glutSolidCube(1.0);
-   glPopMatrix();
-}
-
 void display()
 {
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -88,11 +54,8 @@ void display()
       glVertex3f(gridSize, -1.0, i);
    }
    glEnd();
-
    glutSwapBuffers();
 }
-
-
 
 void reshape(int width, int height) {
    glViewport(0, 0, width, height);
@@ -113,6 +76,7 @@ int main(int argc, char** argv) {
    glutDisplayFunc(display);
    glutReshapeFunc(reshape);
    glutKeyboardFunc(keyboard);
+   glutMouseFunc(mouse);
 
    // Create a grid
    std::vector<std::vector<int>> materials(10, std::vector<int>(10, 255));  // Initialize all materials as 255 (white)

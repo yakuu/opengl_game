@@ -75,9 +75,19 @@ void mouse(int button, int state, int x, int y) {
 
         updateCamera();
         glutPostRedisplay();  // Request redisplay
+    } else if (button == 3) { // Scroll up
+        // Zoom in
+        camPosZ += 1.0f;
+        updateCamera();
+        glutPostRedisplay();  // Request redisplay
+    }
+    else if (button == 4) { // Scroll down
+        // Zoom out
+        camPosZ -= 1.0f;
+        updateCamera();
+        glutPostRedisplay();  // Request redisplay
     }
 }
-
 
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
