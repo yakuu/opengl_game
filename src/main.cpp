@@ -28,6 +28,9 @@ void display()
    // Set up camera
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
+
+   // Control the camera
+   camera.lookAt(0.0f, 0.0f, 0.0f);
    gluLookAt(camPosX, camPosY, camPosZ, targetX, targetY, targetZ, 0.0f, 0.0f, 1.0f);
 
    glRotatef(angle, 1.0, 0.0, 0.0); // rotate cube around x-axis
@@ -41,6 +44,10 @@ void display()
    glVertex3f(1.0, 1.0, 1.0);
    glVertex3f(-1.0, 1.0, 1.0);
    glEnd();
+
+   // Draw the moveable cube
+   glTranslatef(0.0f, 0.0f, -5.0f); // Move the cube away from the camera
+   cube.draw();
 
    // Draw grid
    glBegin(GL_LINES);

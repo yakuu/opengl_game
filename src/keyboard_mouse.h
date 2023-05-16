@@ -1,6 +1,9 @@
 #include <iostream>
 #include <string>
 
+#include "class.h"
+
+
 // Camera position
 float camPosX = 0.0f;
 float camPosY = 0.0f;
@@ -38,6 +41,11 @@ GLfloat groundMaterial[] = {0.8, 0.8, 0.8, 1.0};
 
 // Camera settings
 GLfloat angle = 90.0;
+
+// Global objects
+Cube cube;
+Camera camera;
+
 
 void initCamera() {
     // Set camera position, target, and up vector
@@ -91,6 +99,18 @@ void mouse(int button, int state, int x, int y) {
 
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
+    case 'w': // Move forward
+        cube.move(0.0f, 0.0f, -0.1f);
+        break;
+    case 's': // Move backward
+        cube.move(0.0f, 0.0f, 0.1f);
+        break;
+    case 'a': // Move left
+        cube.move(-0.1f, 0.0f, 0.0f);
+        break;
+    case 'd': // Move right
+        cube.move(0.1f, 0.0f, 0.0f);
+        break;
     case '8':
         // Move camera forward
         camPosZ -= 0.1f;
