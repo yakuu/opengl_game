@@ -32,20 +32,14 @@ jobs:
             mesa-common-dev \
             libglu1-mesa-dev
 
+      - name: Create Object Directory
+        run: mkdir obj
+
       - name: Build
         run: |
           g++ -m64 -I/usr/include -c src/main.cpp -o obj/main.o -fpermissive
           g++ -m64 -o myprogram obj/main.o -L/usr/lib -lGLEW -lglut -lGL -lGLU -fpermissive
 
-      - name: Cache Object Files and Executable
-        uses: actions/cache@v2
-        with:
-          path: |
-            obj/main.o
-            myprogram
-          key: ${{ runner.os }}-cache-${{ hashFiles('**/*.cpp') }}
-
       - name: Run Tests
         run: |
           # Run your tests or executable here
-          ./myprogram
