@@ -2,14 +2,15 @@
 #define KEYBOARD_MOUSE_H
 
 #include <GL/glut.h>
+#include "materials.h"
 #include "class.h"
 
 // Global variables
 static int windowWidth = 800;
 static int windowHeight = 600;
-static Grid grid;
-static Cube cube(grid);
-static Game game(grid); // Create the Game object with the Grid object
+static Grid* grid;
+static Cube* cube;
+static Game* game;
 
 // Mouse function
 void mouse(int button, int state, int x, int y) {
@@ -44,42 +45,50 @@ void display() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    // Draw the grid
-    grid.draw();
+    Materials::applyDefaultMaterial();
 
-    // Draw the cube
-    cube.draw();
+    grid->draw();
+    cube->draw();
 
     // Swap buffers
     glutSwapBuffers();
+    glutPostRedisplay();
 }
 
 // Keyboard function
 void keyboard(unsigned char key, int x, int y) {
-    game.keyboard(key, x, y);
+    game->keyboard(key, x, y);
 
     // Redraw the scene
     glutPostRedisplay();
 }
 
-void initialize() {
-    // Set the grid size and materials
+// Initialize function
+void initialize(Grid& gridObj, Cube& cubeObj) {
+    grid = &gridObj;
+    cube = &cubeObj;
+    game = new Game(gridObj);
+
+    // Set the grid size
     int numRows = 10;
     int numCols = 10;
     float cellSize = 50.0f;
-    grid.setGridSize(numRows, numCols, cellSize);
+    grid->setGridSize(numRows, numCols, cellSize);
 
-    std::vector<std::vector<int>> materials(numRows, std::vector<int>(numCols, 255));
-    grid.setMaterials(materials);
+    // Create and apply the default material
+    Materials materials;
+    materials.applyDefaultMaterial();
+    grid->setMaterials(materials);
 
-    // Set the initial cube position
-    cube.x = 0;
-    cube.y = 0;
+    // Set the cube position
+    cube->x = 0;
+    cube->y = 0;
 
     // Set up the display mode and window
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(windowWidth, windowHeight);
-    glutCreateWindow("Keyboard and Mouse Example"); // Create the window here
+    glutInitWindowPosition(100, 100); // sets the window position
+    glutCreateWindow("Keyboard and Mouse Example");
 
     // Set the callback functions
     glutDisplayFunc(display);
@@ -89,10 +98,6 @@ void initialize() {
 
     // Set the clear color
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-    // Enter the main loop
-    glutMainLoop();
 }
-
 
 #endif // KEYBOARD_MOUSE_H

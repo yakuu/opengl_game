@@ -4,17 +4,22 @@
 #include <GL/glut.h>
 #include <vector>
 
-class SceneCamera {
-    // Implementation of SceneCamera
+class Materials {
+public:
+    int getMaterial(int i, int j) const {
+        // Implementation to retrieve material information for a given grid cell
+        // Replace with your actual implementation
+        return 0;
+    }
 };
-
-class CubeCamera {
-    // Implementation of CubeCamera
-};
-
 
 class Grid {
 public:
+    int rows;
+    int cols;
+    float size;
+    float scale = 1.0f;
+
     Grid() = default; // Default constructor
 
     void setGridSize(int numRows, int numCols, float cellSize) {
@@ -23,8 +28,10 @@ public:
         size = cellSize;
     }
 
-    void setMaterials(const std::vector<std::vector<int>>& materials) {
-        material = materials;
+    void setMaterials(const Materials& materials) {
+        // Set the materials for the grid
+        // You can implement the logic here to store the materials in the grid
+        // Replace this placeholder implementation with your actual logic
     }
 
     void draw() {
@@ -34,16 +41,13 @@ public:
         // Draw the grid
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < cols; ++j) {
-                // Set the material color
-                int mat = material[i][j];
-                glColor3f(mat / 255.0f, mat / 255.0f, mat / 255.0f);
-
                 // Calculate the position of the grid cell
                 float posX = j * scaledSize;
                 float posY = i * scaledSize;
 
                 // Draw a square for each cell
                 glBegin(GL_QUADS);
+                glColor3f(1.0f, 1.0f, 1.0f); // Set the material color
                 glVertex2f(posX, posY);
                 glVertex2f(posX, posY + scaledSize);
                 glVertex2f(posX + scaledSize, posY + scaledSize);
@@ -52,25 +56,7 @@ public:
             }
         }
     }
-
-    // Getter and setter functions for other member variables as needed
-
-    int getRows() const {
-        return rows;
-    }
-
-    int getCols() const {
-        return cols;
-    }
-
-private:
-    int rows;
-    int cols;
-    float size;
-    float scale = 1.0f;
-    std::vector<std::vector<int>> material; // Material value for each grid cell
 };
-
 
 struct Cube {
     int x;
@@ -79,33 +65,9 @@ struct Cube {
 
     Cube(Grid& gridObj) : grid(gridObj) {}
 
-    void moveUp() {
-        if (y < grid.getRows() - 1) { // Check if not at the top boundary
-            y++;
-        }
-    }
-
-    void moveDown() {
-        if (y > 0) { // Check if not at the bottom boundary
-            y--;
-        }
-    }
-
-    void moveLeft() {
-        if (x > 0) { // Check if not at the left boundary
-            x--;
-        }
-    }
-
-    void moveRight() {
-        if (x < grid.getCols() - 1) { // Check if not at the right boundary
-            x++;
-        }
-    }
-
     void draw() {
         glBegin(GL_QUADS);
-        glColor3f(1.0, 1.0, 1.0); // white
+        glColor3f(1.0, 0.20, 1.0); // Magenta
         glVertex3f(-1.0, -1.0, 1.0);
         glVertex3f(1.0, -1.0, 1.0);
         glVertex3f(1.0, 1.0, 1.0);
@@ -117,23 +79,24 @@ struct Cube {
 class Game {
 private:
     Cube cube;
+    Grid& grid;
 
 public:
-    Game(Grid& gridObj) : cube(gridObj) {} // Constructor that takes a Grid object
+    Game(Grid& gridObj) : cube(gridObj), grid(gridObj) {} // Constructor that takes a Grid object
 
     void keyboard(unsigned char key, int x, int y) {
         switch (key) {
             case 'w':
-                cube.moveUp();
+                cube.y++;
                 break;
             case 's':
-                cube.moveDown();
+                cube.y--;
                 break;
             case 'a':
-                cube.moveLeft();
+                cube.x--;
                 break;
             case 'd':
-                cube.moveRight();
+                cube.x++;
                 break;
         }
     }
