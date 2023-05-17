@@ -1,175 +1,98 @@
-#include <iostream>
-#include <string>
+#ifndef KEYBOARD_MOUSE_H
+#define KEYBOARD_MOUSE_H
 
+#include <GL/glut.h>
 #include "class.h"
 
+// Global variables
+static int windowWidth = 800;
+static int windowHeight = 600;
+static Grid grid;
+static Cube cube(grid);
+static Game game(grid); // Create the Game object with the Grid object
 
-// Camera position
-float camPosX = 0.0f;
-float camPosY = 0.0f;
-float camPosZ = 10.0f;
-
-// Camera target
-float targetX = 0.0f;
-float targetY = 0.0f;
-float targetZ = 0.0f;
-
-// Camera up vector
-float upX = 0.0f;
-float upY = 1.0f;
-float upZ = 0.0f;
-
-// Set camera position
-float camPos[] = {camPosX, camPosY, camPosZ};
-
-// Set camera target
-float camTarget[] = {targetX, targetY, targetZ};
-
-// Set camera up vector
-float camUp[] = {upX, upY, upZ};
-
-const int screenWidth = 1920;
-const int screenHeight = 1080;
-const int gridSize = 50;
-
-float cubeX = 0.0f;
-float cubeY = 0.0f;
-float cubeZ = 0.0f;
-
-GLfloat backgroundMaterial[] = {0.0, 0.0, 1.0, 1.0};
-GLfloat groundMaterial[] = {0.8, 0.8, 0.8, 1.0};
-
-// Camera settings
-GLfloat angle = 90.0;
-
-// Global objects
-Cube cube;
-Camera camera;
-
-
-void initCamera() {
-    // Set camera position, target, and up vector
-    camPosX = 0.0f;
-    camPosY = -23.100052f;
-    camPosZ = 7.999997f;
-
-    targetX = 0.0f;
-    targetY = 0.0f;
-    targetZ = 0.0f;
-
-    upX = 0.0f;
-    upY = 1.0f;
-    upZ = 0.0f;
-}
-
-void updateCamera() {
-    gluLookAt(camPosX, camPosY, camPosZ, targetX, targetY, targetZ, upX, upY, upZ);
-}
-
+// Mouse function
 void mouse(int button, int state, int x, int y) {
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-        // Left mouse button pressed
-        // Update target based on mouse position
-        targetX = (x - glutGet(GLUT_WINDOW_WIDTH)/2.0f) / 10.0f;
-        targetY = (glutGet(GLUT_WINDOW_HEIGHT)/2.0f - y) / 10.0f;
-
-        updateCamera();
-        glutPostRedisplay();  // Request redisplay
-    } else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
-        // Right mouse button pressed
-        // Update camera position based on mouse position
-        camPosX = (x - glutGet(GLUT_WINDOW_WIDTH)/2.0f) / 10.0f;
-        camPosY = (glutGet(GLUT_WINDOW_HEIGHT)/2.0f - y) / 10.0f + 10.0f;
-
-        updateCamera();
-        glutPostRedisplay();  // Request redisplay
-    } else if (button == 3) { // Scroll up
-        // Zoom in
-        camPosZ += 1.0f;
-        updateCamera();
-        glutPostRedisplay();  // Request redisplay
-    }
-    else if (button == 4) { // Scroll down
-        // Zoom out
-        camPosZ -= 1.0f;
-        updateCamera();
-        glutPostRedisplay();  // Request redisplay
-    }
+    // Handle mouse events here
+    // ...
+    // Implementation for mouse handling
 }
 
+// Reshape function
+void reshape(int width, int height) {
+    // Update the window width and height
+    windowWidth = width;
+    windowHeight = height;
+
+    // Set the viewport and projection matrix
+    glViewport(0, 0, width, height);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, width, 0, height, -1, 1);
+
+    // Set the modelview matrix
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
+
+// Display function
+void display() {
+    // Clear the buffer
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Set the modelview matrix
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    // Draw the grid
+    grid.draw();
+
+    // Draw the cube
+    cube.draw();
+
+    // Swap buffers
+    glutSwapBuffers();
+}
+
+// Keyboard function
 void keyboard(unsigned char key, int x, int y) {
-    switch (key) {
-    case 'w': // Move forward
-        cube.move(0.0f, 0.0f, -0.1f);
-        break;
-    case 's': // Move backward
-        cube.move(0.0f, 0.0f, 0.1f);
-        break;
-    case 'a': // Move left
-        cube.move(-0.1f, 0.0f, 0.0f);
-        break;
-    case 'd': // Move right
-        cube.move(0.1f, 0.0f, 0.0f);
-        break;
-    case '8':
-        // Move camera forward
-        camPosZ -= 0.1f;
-        break;
-    case '5':
-        // Move camera backward
-        camPosZ += 0.1f;
-        break;
-    case '4':
-        // Strafe camera left
-        camPosX -= 0.1f;
-        break;
-    case '6':
-        // Strafe camera right
-        camPosX += 0.1f;
-        break;
-    case '9':
-        // Move camera up
-        camPosY += 0.1f;
-        break;
-    case '7':
-        // Move camera down
-        camPosY -= 0.1f;
-        break;
-    }
-   camPos[0] = camPosX;
-   camPos[1] = camPosY;
-   camPos[2] = camPosZ;
-   updateCamera();
-   glutPostRedisplay();  // Request redisplay
-   // Convert float values to strings
-   std::string camPosStr = std::to_string(camPos[0]) + ", " + std::to_string(camPos[1]) + ", " + std::to_string(camPos[2]);
-   std::string camTargetStr = std::to_string(camTarget[0]) + ", " + std::to_string(camTarget[1]) + ", " + std::to_string(camTarget[2]);
-   std::string camUpStr = std::to_string(camUp[0]) + ", " + std::to_string(camUp[1]) + ", " + std::to_string(camUp[2]);
-   // Print the values
-   std::cout << "Camera Position: " << camPosStr << std::endl;
-   std::cout << "Camera Target: " << camTargetStr << std::endl;
-   std::cout << "Camera Up: " << camUpStr << std::endl;
+    game.keyboard(key, x, y);
+
+    // Redraw the scene
+    glutPostRedisplay();
 }
 
-void special(int key, int x, int y) {
-    switch (key) {
-        case GLUT_KEY_UP:
-            // Rotate camera up
-            targetY += 0.1f;
-            break;
-        case GLUT_KEY_DOWN:
-            // Rotate camera down
-            targetY -= 0.1f;
-            break;
-        case GLUT_KEY_LEFT:
-            // Rotate camera left
-            targetX -= 0.1f;
-            break;
-        case GLUT_KEY_RIGHT:
-            // Rotate camera right
-            targetX += 0.1f;
-            break;
-    }
-    updateCamera();
-    glutPostRedisplay();  // Request redisplay
+void initialize() {
+    // Set the grid size and materials
+    int numRows = 10;
+    int numCols = 10;
+    float cellSize = 50.0f;
+    grid.setGridSize(numRows, numCols, cellSize);
+
+    std::vector<std::vector<int>> materials(numRows, std::vector<int>(numCols, 255));
+    grid.setMaterials(materials);
+
+    // Set the initial cube position
+    cube.x = 0;
+    cube.y = 0;
+
+    // Set up the display mode and window
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitWindowSize(windowWidth, windowHeight);
+    glutCreateWindow("Keyboard and Mouse Example"); // Create the window here
+
+    // Set the callback functions
+    glutDisplayFunc(display);
+    glutReshapeFunc(reshape);
+    glutKeyboardFunc(keyboard);
+    glutMouseFunc(mouse);
+
+    // Set the clear color
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+    // Enter the main loop
+    glutMainLoop();
 }
+
+
+#endif // KEYBOARD_MOUSE_H
