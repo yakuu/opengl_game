@@ -3,15 +3,7 @@
 
 #include <GL/glut.h>
 #include <vector>
-
-class Materials {
-public:
-    int getMaterial(int i, int j) const {
-        // Implementation to retrieve material information for a given grid cell
-        // Replace with your actual implementation
-        return 0;
-    }
-};
+#include "materials.h"
 
 class Grid {
 public:
@@ -19,6 +11,7 @@ public:
     int cols;
     float size;
     float scale = 1.0f;
+    Materials materials; // Instance of Materials class
 
     Grid() = default; // Default constructor
 
@@ -26,12 +19,6 @@ public:
         rows = numRows;
         cols = numCols;
         size = cellSize;
-    }
-
-    void setMaterials(const Materials& materials) {
-        // Set the materials for the grid
-        // You can implement the logic here to store the materials in the grid
-        // Replace this placeholder implementation with your actual logic
     }
 
     void draw() {
@@ -44,6 +31,9 @@ public:
                 // Calculate the position of the grid cell
                 float posX = j * scaledSize;
                 float posY = i * scaledSize;
+
+                // Set the material properties
+                materials.applyDefaultMaterial();
 
                 // Draw a square for each cell
                 glBegin(GL_QUADS);

@@ -45,8 +45,6 @@ void display() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    Materials::applyDefaultMaterial();
-
     grid->draw();
     cube->draw();
 
@@ -54,7 +52,6 @@ void display() {
     glutSwapBuffers();
     glutPostRedisplay();
 }
-
 // Keyboard function
 void keyboard(unsigned char key, int x, int y) {
     game->keyboard(key, x, y);
@@ -74,15 +71,6 @@ void initialize(Grid& gridObj, Cube& cubeObj) {
     int numCols = 10;
     float cellSize = 50.0f;
     grid->setGridSize(numRows, numCols, cellSize);
-
-    // Create and apply the default material
-    Materials materials;
-    materials.applyDefaultMaterial();
-    grid->setMaterials(materials);
-
-    // Set the cube position
-    cube->x = 0;
-    cube->y = 0;
 
     // Set up the display mode and window
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);

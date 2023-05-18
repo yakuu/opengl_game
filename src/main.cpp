@@ -17,7 +17,5 @@ int main(int argc, char** argv) {
 
     glutMainLoop();
 
-    delete game;
-
     return 0;
 }
